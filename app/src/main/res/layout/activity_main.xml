@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#00A0FC"
     tools:context=".MainActivity">
 
     <ImageView
@@ -19,15 +20,14 @@
 
     <SeekBar
         android:id="@+id/seek_bar"
-        android:layout_width="391dp"
-        android:layout_height="14dp"
-        android:layout_marginStart="14dp"
-        android:layout_marginLeft="14dp"
-        android:layout_marginTop="36dp"
-        android:layout_marginEnd="6dp"
-        android:layout_marginRight="6dp"
+        android:layout_width="320dp"
+        android:layout_height="18dp"
+        android:layout_marginStart="45dp"
+        android:layout_marginLeft="45dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="45dp"
+        android:layout_marginRight="45dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
@@ -100,8 +100,8 @@
         android:id="@+id/current_time"
         android:layout_width="55sp"
         android:layout_height="20sp"
-        android:layout_marginStart="270dp"
-        android:layout_marginLeft="270dp"
+        android:layout_marginStart="200dp"
+        android:layout_marginLeft="200dp"
         android:gravity="end"
         android:text="@string/currentTime"
         android:textAlignment="viewEnd"
@@ -112,13 +112,10 @@
         android:id="@+id/total_time"
         android:layout_width="60sp"
         android:layout_height="20sp"
-        android:layout_marginStart="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginRight="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginRight="32dp"
         android:text="@string/totalTime"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/current_time"
         app:layout_constraintTop_toBottomOf="@+id/imageView" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -5,15 +5,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -26,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView songTitle, currentTimeView, totalTimeView;
     private Handler seekBarUpdateHandler;
     private Runnable updateSeekBar;
+    private MediaPlayer.OnCompletionListener completionListener;
 
     public static List<Song> listSong;
     public static int index = 0;
@@ -69,6 +69,13 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
+        this.completionListener = new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                switchMediaNext(true);
+            }
+        };
+
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -95,6 +102,7 @@ public class MainActivity extends AppCompatActivity {
         seekBar.setMax(totalTime);
         currentTimeView.setText(TimeHandler.miliSecondsToTimer(0));
         totalTimeView.setText("/   " + TimeHandler.miliSecondsToTimer(totalTime));
+        mediaPlayer.setOnCompletionListener(completionListener);
     }
 
 
@@ -107,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
         init();
     }
 
-    private  void resetSeekBar(MediaPlayer media) {
+    private void resetSeekBar(MediaPlayer media) {
         this.seekBar.setMax(media.getDuration());
         this.seekBar.setProgress(0);
         this.totalTimeView.setText("/   " + TimeHandler.miliSecondsToTimer(media.getDuration()));
@@ -118,12 +126,26 @@ public class MainActivity extends AppCompatActivity {
         if (this.mediaPlayer.isPlaying()) {
             this.mediaPlayer.stop();
         }
-        this.mediaPlayer = null;
     }
 
     private void createPlayer(int songIndex) {
         this.songTitle.setText(listSong.get(songIndex).getTitle());
         this.mediaPlayer = MediaPlayer.create(this, listSong.get(songIndex).getResourceId());
+        this.mediaPlayer.setOnCompletionListener(this.completionListener);
+    }
+
+    private void switchMediaNext(boolean isNext) {
+        resetPlayer();
+        if (isNext) {
+            index = index + 1 >= listSong.size() ? 0 : index + 1;
+        } else {
+            index = index - 1 < 0 ? listSong.size() - 1 : index - 1;
+        }
+        createPlayer(index);
+        resetSeekBar(this.mediaPlayer);
+        this.mediaPlayer.start();
+        this.play.setImageResource(PAUSE_IMG);
+        this.seekBarUpdateHandler.postDelayed(this.updateSeekBar, 1000);
     }
 
     public void play(View view) {
@@ -139,23 +161,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void next(View view) {
-        resetPlayer();
-        index = index + 1 >= listSong.size() ? 0 : index + 1;
-        createPlayer(index);
-        resetSeekBar(this.mediaPlayer);
-        this.mediaPlayer.start();
-        this.play.setImageResource(PAUSE_IMG);
-        this.seekBarUpdateHandler.postDelayed(this.updateSeekBar, 1000);
-        Log.i("TOTAL_TIME", TimeHandler.miliSecondsToTimer(this.mediaPlayer.getDuration()));
+        switchMediaNext(true);
     }
 
     public void previous(View view) {
-        resetPlayer();
-        index = index - 1 < 0 ? listSong.size() - 1 : index - 1;
-        createPlayer(index);
-        resetSeekBar(this.mediaPlayer);
-        this.mediaPlayer.start();
-        this.seekBarUpdateHandler.postDelayed(this.updateSeekBar, 1000);
-        this.play.setImageResource(PAUSE_IMG);
+        switchMediaNext(false);
     }
 }
