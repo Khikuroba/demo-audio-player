@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">mp3clone</string>
+    <string name="app_name">MP3 Clone</string>
     <string name="songName" />
     <string name="info" />
     <string name="title_activity_play">PlayActivity</string>
